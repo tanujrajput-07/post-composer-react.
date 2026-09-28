@@ -1,0 +1,169 @@
+import React, { useState } from "react";
+import { createRoot } from "react-dom/client";
+
+import "./style.css";
+
+function App() {
+  // State for selected platform and post text
+  const [platform, setPlatform] = useState("Twitter");
+  const [post, setPost] = useState("");
+
+  // Character limit based on selected platform
+  const limit = platform === "Twitter" ? 280 : 3000;
+
+  // Check whether the post exceeds the limit
+  const isExceeded = post.length > limit;
+
+  // Handle platform change
+  const handlePlatformChange = (event) => {
+    setPlatform(event.target.value);
+  };
+
+  // Handle textarea input
+  const handlePostChange = (event) => {
+    setPost(event.target.value);
+  };
+
+  // Handle post button
+  const handleSubmit = () => {
+    if (post.trim() === "") {
+      alert("Please write something before posting.");
+      return;
+    }
+
+    if (isExceeded) {
+      return;
+    }
+
+    alert(`Post successfully created for ${platform}!`);
+  };
+
+  return (
+    <div className="page">
+      <div className="container">
+
+        <h1>Post Composer</h1>
+
+        <label>Select Platform:</label>
+
+        <select
+          value={platform}
+          onChange={handlePlatformChange}
+        >
+          <option value="Twitter">Twitter</option>
+          <option value="LinkedIn">LinkedIn</option>
+        </select>
+
+        <label>Write your post:</label>
+
+        <textarea
+          value={post}
+          onChange={handlePostChange}
+          placeholder="Write your post here..."
+        />
+
+        <div className="count">
+          {post.length} / {limit} characters
+        </div>
+
+        {isExceeded && (
+          <p className="error">
+            {platform} post cannot exceed {limit} characters.
+          </p>
+        )}
+
+        <button
+          onClick={handleSubmit}
+          disabled={isExceeded}
+        >
+          Post
+        </button>
+
+      </div>
+    </div>
+  );
+}
+
+createRoot(document.getElementById("root")).render(<App />);
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 500px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+.count {
+  margin-top: 8px;
+  text-align: right;
+  color: #555;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
